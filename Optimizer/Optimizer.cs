@@ -26,24 +26,24 @@ namespace Optimizer
                 Console.WriteLine("No parameter set to run, Exit!");
                 return;
             }
-            int i = 0;
+            int threadNum = 0;
             List<Worker> workerList = new List<Worker>();
             foreach (model.Parameters parameters in _parameterSet)
             {
                 _workerQueue.Publish(parameters);
-               Console.WriteLine("Worker Thread " + i + " is init to handle the job");
+                Console.WriteLine("Worker Thread " + threadNum + " is init to handle the job");
                 Worker worker = new Worker();
-                Thread workerThread = new Thread(worker.Run) { IsBackground = true, Name = "WorkerThread" + i++ };
+                Thread workerThread = new Thread(worker.Run) { IsBackground = true, Name = "WorkerThread" + threadNum++ };
                 workerThread.Start();
                 workerList.Add(worker);
-                //Thread.Sleep(5 * 1000);
             }
 
             // 3. Summarize the statistics
             var ts = Stopwatch.StartNew();
+            _workerQueue.Consume("log_queue", threadNum, "log.txt");
             while (workerList.Any(w => w.IsActive) && ts.ElapsedMilliseconds < 3000 * 1000)
             {
-                Thread.Sleep(10 * 1000);
+                Thread.Sleep(5 * 1000);
                 Console.WriteLine("Waiting for worker threads to exit...");
             }
 
@@ -56,8 +56,8 @@ namespace Optimizer
         {
             var result = new HashSet<model.Parameters>();
 
-            var fastPeriodConfig = "10:100:50";
-            var slowPeriodConfig = "20:110:50";
+            var fastPeriodConfig = "10:100:20";
+            var slowPeriodConfig = "20:110:20";
             var fastPeriodRange = fastPeriodConfig.Split(':').Select(x => Convert.ToInt32(x)).ToList();
             var slowPeriodRange = slowPeriodConfig.Split(':').Select(x => Convert.ToInt32(x)).ToList();
             int steps = 0;

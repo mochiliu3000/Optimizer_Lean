@@ -10,8 +10,8 @@ namespace Optimizer
     class Worker
     {
         public bool IsActive { get; private set; }
-        private const string leanRoot = "C:\\Users\\Administrator\\Desktop\\quantConnect\\Mylean\\Lean";
-        private const string exeRelativePath = "\\Launcher\\bin\\Debug\\QuantConnect.Lean.Launcher.exe";
+        private const string leanRoot = "C:/Users/Administrator/Desktop/quantConnect/Mylean/Lean";
+        private const string exeRelativePath = "/Launcher/bin/Debug/QuantConnect.Lean.Launcher.exe";
 
 
         public void Run()
@@ -24,11 +24,19 @@ namespace Optimizer
 
         private void LaunchLean(ProcessStartInfo startInfo)
         {
-            // Start a Lean process
-            using (Process exeProcess = Process.Start(startInfo))
+            try
             {
-                exeProcess.WaitForExit();
+                // Start a Lean process
+                using (Process exeProcess = Process.Start(startInfo))
+                {
+                    exeProcess.WaitForExit();
+                }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+  
         }
     }
 }
