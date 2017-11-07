@@ -10,14 +10,15 @@ namespace Optimizer
 {
     class RabbitmqHandler
     {
-        public void Publish(model.Parameters parameters)
+        //public void Publish(model.Parameters parameters)
+        public void Publish(model.ShortParameters parameters, string queueName)
         {
             var factory = new ConnectionFactory() { HostName = "localhost" };
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
                 // Declaring a queue is idempotent - it will only be created if it doesn't exist already
-                channel.QueueDeclare(queue: "worker_queue",
+                channel.QueueDeclare(queue: queueName,
                                      durable: true,
                                      exclusive: false,
                                      autoDelete: false,
@@ -34,7 +35,7 @@ namespace Optimizer
                 // publish is the key action for producer; send to the queue
                 // the task will only send once. once the task is sent to the queue, it will out of the channel.
                 channel.BasicPublish(exchange: "",
-                                     routingKey: "worker_queue",
+                                     routingKey: queueName,
                                      basicProperties: properties,
                                      body: body);
                 Console.WriteLine("Published a parameter set to worker queue --- " + message);
@@ -69,7 +70,7 @@ namespace Optimizer
                     if (message == null)
                     {
                         //throw new Exception("Error: Empty log message received, Exit!");
-                        channel.BasicAck(deliveryTag: message.DeliveryTag, multiple: false);
+                        //channel.BasicAck(deliveryTag: message.DeliveryTag, multiple: false);
                         continue;
                     }
 
