@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 from zipfile import ZipFile
 import os
 
@@ -18,18 +18,18 @@ def txt_to_csv(txt_file_dir, csv_folder):
 		for line in txt_file:
 			# process the line
 			columns = line.split(',')
-			date = datetime.strptime(columns[0], '%Y-%m-%d %H:%M:%S')
-			seconds = (date - datetime(1970, 1, 1)).total_seconds()
-			day_seconds = date.date().total_seconds()
+			time = datetime.strptime(columns[0], '%Y-%m-%d %H:%M:%S')
+			seconds = (time - datetime(1970, 1, 1)).total_seconds()
+			day_seconds = (time.date() - date(1970, 1, 1)).total_seconds()
 			new_line = "%.0f,%.0f,%.0f,%.0f,%.0f,%.0f\n" % (seconds - day_seconds, float(columns[2]) * 10000, float(columns[3]) * 10000, float(columns[4]) * 10000, float(columns[5]) * 10000, float(columns[1]))
 
-			filename = csv_folder + "/" + date.date().strftime('%Y%m%d') + "_RU_minute_trade.csv"
+			filename = csv_folder + "/" + time.date().strftime('%Y%m%d') + "_RU_minute_trade.csv"
 			with open(filename, 'a+') as csv_file:
 				csv_file.write(new_line)
 
 
-txt_file_dir = "C:/Users/IBM_ADMIN/Desktop/data.Futures.1min.raw.all.2011-2017/Future/RU/RU.1min.2011.08.08.14.46.00.2017.02.10.14.59.00.txt"
-csv_file_dir = "C:/Users/IBM_ADMIN/Desktop/data.Futures.1min.raw.all.2011-2017/Future/RU/result"
+txt_file_dir = "./RU.1min.2011.08.08.14.46.00.2017.02.10.14.59.00.txt"
+csv_file_dir = "./csv"
 txt_to_csv(txt_file_dir, csv_file_dir)
 
 def csv_to_zip(csv_folder, zip_folder):
@@ -38,6 +38,6 @@ def csv_to_zip(csv_folder, zip_folder):
 		with ZipFile(zipname, 'w') as myzip:
 			myzip.write(csv_folder + '/' + filename, filename)
 
-zip_file_dir = "C:/Users/IBM_ADMIN/Desktop/data.Futures.1min.raw.all.2011-2017/Future/RU/RU"
-#csv_to_zip(csv_file_dir, zip_file_dir)
+zip_file_dir = "./zip"
+csv_to_zip(csv_file_dir, zip_file_dir)
 
