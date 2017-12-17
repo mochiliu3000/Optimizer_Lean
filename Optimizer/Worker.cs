@@ -10,7 +10,7 @@ namespace Optimizer
     class Worker
     {
         public bool IsActive { get; private set; }
-        private const string leanRoot = "C:/Users/Administrator/Desktop/quantConnect/Mylean/Lean";
+        private const string leanRoot = "C:/Mol/Lean";
         private const string exeRelativePath = "/Launcher/bin/Debug/QuantConnect.Lean.Launcher.exe";
 
 
