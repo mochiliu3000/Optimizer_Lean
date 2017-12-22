@@ -21,9 +21,9 @@ def txt_to_csv(txt_file_dir, csv_folder):
 			time = datetime.strptime(columns[0], '%Y-%m-%d %H:%M:%S')
 			seconds = (time - datetime(1970, 1, 1)).total_seconds()
 			day_seconds = (time.date() - date(1970, 1, 1)).total_seconds()
-			new_line = "%.0f,%.0f,%.0f,%.0f,%.0f,%.0f\n" % (seconds - day_seconds, float(columns[2]) * 10000, float(columns[3]) * 10000, float(columns[4]) * 10000, float(columns[5]) * 10000, float(columns[1]))
+			new_line = "%.0f,%.0f,%.0f,%.0f,%.0f,%.0f\n" % ((seconds - day_seconds) * 1000, float(columns[2]) * 10000, float(columns[3]) * 10000, float(columns[4]) * 10000, float(columns[5]) * 10000, float(columns[1]))
 
-			filename = csv_folder + "/" + time.date().strftime('%Y%m%d') + "_RU_minute_trade.csv"
+			filename = csv_folder + "/" + time.date().strftime('%Y%m%d') + "_spy_minute_trade.csv"
 			with open(filename, 'a+') as csv_file:
 				csv_file.write(new_line)
 
